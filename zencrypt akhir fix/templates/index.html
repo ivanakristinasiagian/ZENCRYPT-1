@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ZenCrypt</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top left, #112244, #050c18 50%, #02050c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1120px;
+            background: rgba(8, 16, 32, 0.96);
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            position: relative;
+        }
+
+        /* =========================
+           SLIDER
+        ========================= */
+        .slider-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 300%;
+            transition: transform 0.5s ease;
+        }
+
+        .slide {
+            width: 33.3333%;
+            flex-shrink: 0;
+            padding: 0 8px;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(11, 23, 44, 0.98), rgba(6, 15, 30, 0.98));
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 24px;
+            padding: 28px;
+            min-height: 760px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            right: -100px;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79,140,255,0.25), transparent 70%);
+            pointer-events: none;
+        }
+
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: -100px;
+            left: -80px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(143,60,255,0.18), transparent 70%);
+            pointer-events: none;
+        }
+
+        /* =========================
+           WELCOME
+        ========================= */
+        .compact-welcome {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 760px;
+            display: flex;
+            padding: 40px 20px;
+        }
+
+        .centered-welcome {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(79, 140, 255, 0.12);
+            color: #bcd5ff;
+            font-size: 14px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(79,140,255,0.18);
+        }
+
+        .compact-title {
+            font-size: 64px;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .compact-title span {
+            background: linear-gradient(90deg, #76a8ff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .compact-subtitle {
+            max-width: 680px;
+            margin: 0 auto 16px auto;
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: center;
+            color: #d6e2f3;
+        }
+
+        .mini-highlight {
+            display: inline-block;
+            margin-bottom: 28px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            background: rgba(79, 140, 255, 0.10);
+            border: 1px solid rgba(79,140,255,0.18);
+            color: #bdd5ff;
+            font-size: 14px;
+        }
+
+        .welcome-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 15px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .primary-btn {
+            color: white;
+            background: linear-gradient(90deg, #0f6bff, #8f3cff);
+            box-shadow: 0 12px 28px rgba(79, 140, 255, 0.25);
+        }
+
+        .secondary-btn {
+            color: #dbe7ff;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .primary-btn:hover,
+        .secondary-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* =========================
+           COMMON CARD CONTENT
+        ========================= */
+        .section-title {
+            font-size: 34px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-subtitle {
+            color: #c3cee0;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .max-size {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(0, 255, 170, 0.12);
+            color: #7effcd;
+            font-size: 13px;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================
+           DROP AREA
+        ========================= */
+        .drop-area {
+            width: 100%;
+            border: 2px dashed #2b5cff;
+            border-radius: 18px;
+            background: #051121;
+            padding: 34px 20px;
+            text-align: center;
+            transition: 0.25s ease;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .drop-area.dragover {
+            border-color: #9b5cff;
+            background: #0a1730;
+        }
+
+        .drop-area.invalid {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+        }
+
+        .drop-area input[type="file"] {
+            display: none;
+        }
+
+        .drop-label {
+            cursor: pointer;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .drop-label .icon {
+            font-size: 42px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .drop-label .main-text {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .drop-label .sub-text {
+            display: block;
+            color: #9fb1cc;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .browse-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            border-radius: 12px;
+            background: linear-gradient(90deg, #0f6bff, #4d8fff);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .file-name {
+            margin-top: 14px;
+            font-size: 14px;
+            color: #bfd4ff;
+            word-break: break-word;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+        .form-group {
+            margin-top: 18px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #eef3ff;
+        }
+
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-wrapper input {
+            width: 100%;
+            padding: 14px 48px 14px 14px;
+            border-radius: 14px;
+            border: none;
+            outline: none;
+            background: #04101f;
+            color: white;
+            font-size: 15px;
+        }
+
+        .password-wrapper input::placeholder {
+            color: #8fa3c0;
+        }
+
+        .password-wrapper.invalid input {
+            border: 1px solid #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        .password-wrapper.invalid .toggle-password {
+            color: #ff8a8a;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            user-select: none;
+            font-size: 18px;
+            color: #dce6f6;
+        }
+
+        .input-error {
+            display: none;
+            margin-top: 8px;
+            color: #ff6b6b;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           PASSWORD STRENGTH
+        ========================= */
+        .strength-container {
+            width: 100%;
+            height: 8px;
+            background: #16253f;
+            border-radius: 999px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 999px;
+            transition: 0.25s ease;
+        }
+
+        .strength-text {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #d8e2f2;
+        }
+
+        .password-rules {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #97aac7;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .submit-btn,
+        .slide-btn {
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s ease;
+            padding: 15px 18px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            background: linear-gradient(90deg, #0f6bff, #8f3cff);
+        }
+
+        .slide-btn {
+            min-width: 140px;
+            background: linear-gradient(90deg, #132b4f, #203b67);
+        }
+
+        .submit-btn:hover,
+        .slide-btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.96;
+        }
+
+        /* ENCRYPT BUTTON LAYOUT */
+        .encrypt-button-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .encrypt-left-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .encrypt-right-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex: 1;
+            justify-content: flex-end;
+        }
+
+        .encrypt-submit-btn {
+            min-width: 250px;
+        }
+
+        /* DECRYPT BUTTON LAYOUT */
+        .decrypt-button-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 140px;
+            align-items: center;
+            gap: 16px;
+            margin-top: 22px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .decrypt-left {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .decrypt-center {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .decrypt-right {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .decrypt-submit-btn {
+            width: 100%;
+            max-width: none;
+            flex: unset;
+        }
+
+        .note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #95a8c6;
+            line-height: 1.5;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================
+           SLIDE INDICATOR
+        ========================= */
+        .slide-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 22px;
+            width: 100%;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #243553;
+            transition: 0.25s;
+        }
+
+        .dot.active {
+            background: #4f8cff;
+            box-shadow: 0 0 10px rgba(79, 140, 255, 0.8);
+        }
+
+        /* =========================
+           TOAST
+        ========================= */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            min-width: 280px;
+            max-width: 360px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateX(120%);
+            transition: all 0.35s ease;
+            z-index: 9999;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(90deg, #16a34a, #22c55e);
+        }
+
+        .toast.warning {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            color: #1f2937;
+        }
+
+        .toast.error {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .toast.info {
+            background: linear-gradient(90deg, #2563eb, #60a5fa);
+        }
+
+        /* =========================
+           SHAKE
+        ========================= */
+        .shake {
+            animation: shakeX 0.45s ease;
+        }
+
+        @keyframes shakeX {
+            0%   { transform: translateX(0); }
+            15%  { transform: translateX(-8px); }
+            30%  { transform: translateX(8px); }
+            45%  { transform: translateX(-6px); }
+            60%  { transform: translateX(6px); }
+            75%  { transform: translateX(-4px); }
+            90%  { transform: translateX(4px); }
+            100% { transform: translateX(0); }
+        }
+
+        @media (max-width: 980px) {
+            .compact-title {
+                font-size: 48px;
+            }
+
+            .decrypt-button-row {
+                grid-template-columns: 1fr;
+            }
+
+            .decrypt-left,
+            .decrypt-center,
+            .decrypt-right {
+                justify-content: stretch;
+            }
+
+            .decrypt-submit-btn,
+            .slide-btn {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 18px;
+            }
+
+            .card {
+                min-height: auto;
+                padding: 20px;
+            }
+
+            .compact-title {
+                font-size: 40px;
+            }
+
+            .compact-subtitle {
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+            .button-row,
+            .welcome-buttons,
+            .encrypt-button-row,
+            .encrypt-left-buttons,
+            .encrypt-right-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .slide-btn,
+            .primary-btn,
+            .secondary-btn,
+            .submit-btn,
+            .encrypt-submit-btn {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="slider-wrapper">
+        <div class="slider-track" id="sliderTrack">
+
+            <!-- =====================================
+                 SLIDE 1 - WELCOME
+            ====================================== -->
+            <div class="slide">
+                <div class="card compact-welcome">
+                    <div class="centered-welcome">
+                        <div class="brand-badge">🔐 Military-Grade File Protection</div>
+
+                        <h1 class="compact-title">
+                            Welcome to <span>ZenCrypt</span>
+                        </h1>
+
+                        <p class="compact-subtitle">
+                            Secure your important files with password-based encryption.
+                            Encrypt and decrypt documents quickly, safely, and easily.
+                        </p>
+
+                        <div class="welcome-buttons">
+                            <button type="button" class="primary-btn" id="startEncrypt">
+                                Get Started
+                            </button>
+                            <button type="button" class="secondary-btn" id="jumpDecrypt">
+                                Go to Decrypt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =====================================
+                 SLIDE 2 - ENCRYPT
+            ====================================== -->
+            <div class="slide">
+                <div class="card">
+                    <h2 class="section-title">Encrypt File</h2>
+                
+                    <span class="max-size">Max File : 10 MB</span>
+
+                    <form id="encryptForm" action="/encrypt" method="POST" enctype="multipart/form-data">
+
+                        <div class="drop-area" id="encryptDropArea">
+                            <label for="encryptFile" class="drop-label">
+                                <span class="icon">📄</span>
+                                <span class="main-text">Drag & Drop your file here</span>
+                                <span class="sub-text">or choose a file manually</span>
+                                <span class="browse-btn">Browse File</span>
+                            </label>
+
+                            <input type="file" id="encryptFile" name="file">
+                            <div class="file-name" id="encryptFileName">No file selected</div>
+                        </div>
+                        <div class="input-error" id="encryptFileError">Invalid: Please select a file</div>
+
+                        <div class="form-group">
+                            <label for="encryptPassword">Password</label>
+                            <div class="password-wrapper" id="encryptPasswordWrapper">
+                                <input type="password" id="encryptPassword" name="password" placeholder="Enter your password">
+                                <span class="toggle-password" data-target="encryptPassword">👁️</span>
+                            </div>
+                            <div class="input-error" id="encryptPasswordError">Invalid: Password is required</div>
+
+                            <div class="strength-container">
+                                <div class="strength-bar" id="encryptStrengthBar"></div>
+                            </div>
+                            <div class="strength-text" id="encryptStrengthText">Password strength: -</div>
+
+                            <div class="password-rules">
+                                minimal 8 karakter, huruf besar, huruf kecil, angka, dan simbol
+                            </div>
+                        </div>
+
+                        <div class="button-row encrypt-button-row">
+                            <div class="encrypt-left-buttons">
+                                <button type="button" class="slide-btn" id="backWelcomeFromEncrypt">Back</button>
+                            </div>
+
+                            <div class="encrypt-right-buttons">
+                                <button type="submit" class="submit-btn encrypt-submit-btn">🔒 Encrypt File</button>
+                                <button type="button" class="slide-btn" id="goDecrypt">Next</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- =====================================
+                 SLIDE 3 - DECRYPT
+            ====================================== -->
+            <div class="slide">
+                <div class="card">
+                    <h2 class="section-title">Decrypt File</h2>
+                    
+                    <span class="max-size">Max File : 10 MB</span>
+
+                    <form id="decryptForm" action="/decrypt" method="POST" enctype="multipart/form-data">
+
+                        <div class="drop-area" id="decryptDropArea">
+                            <label for="decryptFile" class="drop-label">
+                                <span class="icon">📂</span>
+                                <span class="main-text">Drag & Drop your .crypt file here</span>
+                                <span class="sub-text">or choose a file manually</span>
+                                <span class="browse-btn">Browse File</span>
+                            </label>
+
+                            <input type="file" id="decryptFile" name="file">
+                            <div class="file-name" id="decryptFileName">No file selected</div>
+                        </div>
+                        <div class="input-error" id="decryptFileError">Invalid: Please select a .crypt file</div>
+
+                        <div class="form-group">
+                            <label for="decryptPassword">Password</label>
+                            <div class="password-wrapper" id="decryptPasswordWrapper">
+                                <input type="password" id="decryptPassword" name="password" placeholder="Enter your password">
+                                <span class="toggle-password" data-target="decryptPassword">👁️</span>
+                            </div>
+                            <div class="input-error" id="decryptPasswordError">Invalid: Password is required</div>
+
+                            <div class="strength-container">
+                                <div class="strength-bar" id="decryptStrengthBar"></div>
+                            </div>
+
+
+                        <div class="decrypt-button-row">
+                            <div class="decrypt-left">
+                                <button type="button" class="slide-btn" id="backEncrypt">Back</button>
+                            </div>
+
+                            <div class="decrypt-center">
+                                <button type="submit" class="submit-btn decrypt-submit-btn">🔓 Decrypt File</button>
+                            </div>
+
+                            <div class="decrypt-right">
+                                <button type="button" class="slide-btn" id="backWelcomeFromDecrypt">Home</button>
+                            </div>
+                        </div>
+
+                        <div class="note">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- titik slide sekarang di bawah tengah -->
+    <div class="slide-indicator">
+        <div class="dot active" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sliderTrack = document.getElementById("sliderTrack");
+    const toast = document.getElementById("toast");
+
+    const dot1 = document.getElementById("dot1");
+    const dot2 = document.getElementById("dot2");
+    const dot3 = document.getElementById("dot3");
+
+    const startEncrypt = document.getElementById("startEncrypt");
+    const jumpDecrypt = document.getElementById("jumpDecrypt");
+    const goDecrypt = document.getElementById("goDecrypt");
+    const backEncrypt = document.getElementById("backEncrypt");
+    const backWelcomeFromEncrypt = document.getElementById("backWelcomeFromEncrypt");
+    const backWelcomeFromDecrypt = document.getElementById("backWelcomeFromDecrypt");
+
+    const encryptForm = document.getElementById("encryptForm");
+    const decryptForm = document.getElementById("decryptForm");
+
+    const encryptFileInput = document.getElementById("encryptFile");
+    const decryptFileInput = document.getElementById("decryptFile");
+
+    const encryptFileName = document.getElementById("encryptFileName");
+    const decryptFileName = document.getElementById("decryptFileName");
+
+    const encryptDropArea = document.getElementById("encryptDropArea");
+    const decryptDropArea = document.getElementById("decryptDropArea");
+
+    function showToast(message, type = "success") {
+        toast.textContent = message;
+        toast.className = "toast";
+        toast.classList.add(type, "show");
+
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2600);
+    }
+
+    function showSlide(index) {
+        if (index === 0) {
+            sliderTrack.style.transform = "translateX(0)";
+        } else if (index === 1) {
+            sliderTrack.style.transform = "translateX(-33.3333%)";
+        } else {
+            sliderTrack.style.transform = "translateX(-66.6666%)";
+        }
+
+        [dot1, dot2, dot3].forEach(dot => dot.classList.remove("active"));
+
+        if (index === 0) dot1.classList.add("active");
+        if (index === 1) dot2.classList.add("active");
+        if (index === 2) dot3.classList.add("active");
+    }
+
+    startEncrypt.addEventListener("click", () => showSlide(1));
+    jumpDecrypt.addEventListener("click", () => showSlide(2));
+    goDecrypt.addEventListener("click", () => showSlide(2));
+    backEncrypt.addEventListener("click", () => showSlide(1));
+    backWelcomeFromEncrypt.addEventListener("click", () => showSlide(0));
+    backWelcomeFromDecrypt.addEventListener("click", () => showSlide(0));
+
+    function shakeElement(element) {
+        element.classList.remove("shake");
+        void element.offsetWidth;
+        element.classList.add("shake");
+    }
+
+    function showFileInvalid(dropAreaId, errorId, message) {
+        const dropArea = document.getElementById(dropAreaId);
+        const errorText = document.getElementById(errorId);
+
+        dropArea.classList.add("invalid");
+        errorText.textContent = message;
+        errorText.style.display = "block";
+        shakeElement(dropArea);
+        showToast(message, "error");
+    }
+
+    function clearFileInvalid(dropAreaId, errorId) {
+        const dropArea = document.getElementById(dropAreaId);
+        const errorText = document.getElementById(errorId);
+
+        dropArea.classList.remove("invalid", "shake");
+        errorText.style.display = "none";
+    }
+
+    function showPasswordInvalid(passwordId, errorId, message) {
+        const passwordInput = document.getElementById(passwordId);
+        const errorText = document.getElementById(errorId);
+        const wrapper = passwordInput.closest(".password-wrapper");
+
+        wrapper.classList.add("invalid");
+        errorText.textContent = message;
+        errorText.style.display = "block";
+        shakeElement(wrapper);
+        showToast(message, "error");
+    }
+
+    function clearPasswordInvalid(passwordId, errorId) {
+        const passwordInput = document.getElementById(passwordId);
+        const errorText = document.getElementById(errorId);
+        const wrapper = passwordInput.closest(".password-wrapper");
+
+        wrapper.classList.remove("invalid", "shake");
+        errorText.style.display = "none";
+    }
+
+    function updateFileName(inputElement, fileNameElement) {
+        if (inputElement.files && inputElement.files.length > 0) {
+            fileNameElement.textContent = inputElement.files[0].name;
+        } else {
+            fileNameElement.textContent = "No file selected";
+        }
+    }
+
+    encryptFileInput.addEventListener("change", function () {
+        updateFileName(encryptFileInput, encryptFileName);
+        clearFileInvalid("encryptDropArea", "encryptFileError");
+        if (encryptFileInput.files.length > 0) {
+            showToast("Encryption file selected successfully", "success");
+        }
+    });
+
+    decryptFileInput.addEventListener("change", function () {
+        updateFileName(decryptFileInput, decryptFileName);
+        clearFileInvalid("decryptDropArea", "decryptFileError");
+        if (decryptFileInput.files.length > 0) {
+            showToast("Decryption file selected successfully", "success");
+        }
+    });
+
+    function setupDropArea(dropArea, fileInput, fileNameElement, successMessage, dropAreaId, errorId) {
+        ["dragenter", "dragover"].forEach(eventName => {
+            dropArea.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.add("dragover");
+            });
+        });
+
+        ["dragleave", "drop"].forEach(eventName => {
+            dropArea.addEventListener(eventName, function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropArea.classList.remove("dragover");
+            });
+        });
+
+        dropArea.addEventListener("drop", function (e) {
+            const files = e.dataTransfer.files;
+            if (files && files.length > 0) {
+                fileInput.files = files;
+                fileNameElement.textContent = files[0].name;
+                clearFileInvalid(dropAreaId, errorId);
+                showToast(successMessage, "success");
+            }
+        });
+    }
+
+    setupDropArea(
+        encryptDropArea,
+        encryptFileInput,
+        encryptFileName,
+        "Encryption file dropped successfully",
+        "encryptDropArea",
+        "encryptFileError"
+    );
+
+    setupDropArea(
+        decryptDropArea,
+        decryptFileInput,
+        decryptFileName,
+        "Decryption file dropped successfully",
+        "decryptDropArea",
+        "decryptFileError"
+    );
+
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", function () {
+            const targetId = this.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                this.textContent = "🙈";
+            } else {
+                input.type = "password";
+                this.textContent = "👁️";
+            }
+        });
+    });
+
+    function checkPasswordStrength(password) {
+        let score = 0;
+
+        if (password.length >= 8) score++;
+        if (password.length >= 12) score++;
+        if (/[a-z]/.test(password)) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+
+        let label = "-";
+        let width = "0%";
+        let color = "#16253f";
+
+        if (password.length === 0) {
+            label = "-";
+            width = "0%";
+            color = "#16253f";
+        } else if (score <= 2) {
+            label = "lemah";
+            width = "25%";
+            color = "#ef4444";
+        } else if (score <= 4) {
+            label = "sedang";
+            width = "50%";
+            color = "#f59e0b";
+        } else if (score === 5) {
+            label = "kuat";
+            width = "75%";
+            color = "#22c55e";
+        } else {
+            label = "sangat kuat";
+            width = "100%";
+            color = "#06b6d4";
+        }
+
+        return { label, width, color };
+    }
+
+    function setupPasswordStrength(inputId, barId, textId, errorId) {
+        const input = document.getElementById(inputId);
+        const bar = document.getElementById(barId);
+        const text = document.getElementById(textId);
+
+        let lastLevel = "";
+
+        input.addEventListener("input", function () {
+            const result = checkPasswordStrength(this.value);
+
+            bar.style.width = result.width;
+            bar.style.backgroundColor = result.color;
+            text.textContent = "Password strength: " + result.label;
+
+            if (this.value.trim() !== "") {
+                clearPasswordInvalid(inputId, errorId);
+            }
+
+            if (result.label !== "-" && result.label !== lastLevel) {
+                if (result.label === "Weak") {
+                    showToast("Warning: Your password is still weak", "warning");
+                } else if (result.label === "Medium") {
+                    showToast("Your password is fairly secure", "warning");
+                } else if (result.label === "Strong") {
+                    showToast("Great! Your password is strong", "success");
+                } else if (result.label === "Very Strong") {
+                    showToast("Excellent! Your password is very strong", "success");
+                }
+                lastLevel = result.label;
+            }
+        });
+    }
+
+    setupPasswordStrength("encryptPassword", "encryptStrengthBar", "encryptStrengthText", "encryptPasswordError");
+    setupPasswordStrength("decryptPassword", "decryptStrengthBar", "decryptStrengthText", "decryptPasswordError");
+
+    function setupFormValidation(config) {
+        const form = document.getElementById(config.formId);
+        const fileInput = document.getElementById(config.fileId);
+        const passwordInput = document.getElementById(config.passwordId);
+
+        passwordInput.addEventListener("input", function () {
+            if (this.value.trim() !== "") {
+                clearPasswordInvalid(config.passwordId, config.passwordErrorId);
+            }
+        });
+
+        form.addEventListener("submit", function (e) {
+            const file = fileInput.files[0];
+            const password = passwordInput.value.trim();
+
+            if (!file) {
+                e.preventDefault();
+                showFileInvalid(
+                    config.dropAreaId,
+                    config.fileErrorId,
+                    config.mode === "decrypt"
+                        ? "Invalid: Please select a .crypt file"
+                        : "Invalid: Please select a file"
+                );
+                return;
+            }
+
+            if (config.mode === "decrypt" && !file.name.toLowerCase().endsWith(".crypt")) {
+                e.preventDefault();
+                showFileInvalid(
+                    config.dropAreaId,
+                    config.fileErrorId,
+                    "Invalid: Please upload a .crypt file"
+                );
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                e.preventDefault();
+                showFileInvalid(
+                    config.dropAreaId,
+                    config.fileErrorId,
+                    "Invalid: File size exceeds 10 MB"
+                );
+                return;
+            }
+
+            if (password === "") {
+                e.preventDefault();
+                showPasswordInvalid(
+                    config.passwordId,
+                    config.passwordErrorId,
+                    "Invalid: Password is required"
+                );
+                passwordInput.focus();
+                return;
+            }
+
+            if (config.mode === "encrypt" && password.length < 8) {
+                e.preventDefault();
+                showPasswordInvalid(
+                    config.passwordId,
+                    config.passwordErrorId,
+                    "Invalid: Password must be at least 8 characters"
+                );
+                passwordInput.focus();
+                return;
+            }
+
+            clearFileInvalid(config.dropAreaId, config.fileErrorId);
+            clearPasswordInvalid(config.passwordId, config.passwordErrorId);
+
+            if (config.mode === "encrypt") {
+                showToast("Encrypting file...", "info");
+            } else {
+                showToast("Decrypting file...", "info");
+            }
+        });
+    }
+
+    setupFormValidation({
+        formId: "encryptForm",
+        fileId: "encryptFile",
+        passwordId: "encryptPassword",
+        dropAreaId: "encryptDropArea",
+        fileErrorId: "encryptFileError",
+        passwordErrorId: "encryptPasswordError",
+        mode: "encrypt"
+    });
+
+    setupFormValidation({
+        formId: "decryptForm",
+        fileId: "decryptFile",
+        passwordId: "decryptPassword",
+        dropAreaId: "decryptDropArea",
+        fileErrorId: "decryptFileError",
+        passwordErrorId: "decryptPasswordError",
+        mode: "decrypt"
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 12px 45px 12px 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #0d1730;
+    color: white;
+    font-size: 14px;
+}
+
+.eye-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+}
+
+.strength-container {
+    width: 100%;
+    height: 8px;
+    background: #1c2746;
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+#strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: 0.3s ease;
+}
+
+#strength-text {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.input-error {
+    display: none;
+    margin-top: 8px;
+    color: #ff6b6b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.password-wrapper.invalid input {
+    border: 1px solid #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.password-wrapper.invalid .toggle-password {
+    color: #ff8a8a;
+}
+
+.shake {
+    animation: shakeX 0.35s ease;
+}
+
+@keyframes shakeX {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
